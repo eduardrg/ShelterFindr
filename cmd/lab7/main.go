@@ -45,6 +45,14 @@ func main() {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
 
+	router.GET("/admin", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "admin.html", nil)
+	})
+
+	router.GET("/client", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "client.html", nil)
+	})
+
 	router.GET("/ping", func(c *gin.Context) {
 		ping := db.Ping()
 		if ping != nil {
