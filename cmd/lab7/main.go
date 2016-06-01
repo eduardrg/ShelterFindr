@@ -14,7 +14,7 @@ import (
 	// this allows us to run our web server
 	"github.com/gin-gonic/gin"
 	// this lets us connect to Postgres DB's
-	_ "github.com/lib/pq"
+	"github.com/lib/pq"
 	// this allows us to better format JSON responses
 
 
