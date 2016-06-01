@@ -67,10 +67,10 @@ func main() {
 	//   BRITTNEY'S CLIENT VIEW CODE!!!!
 	//-----------------------------------------------
 
-		// var location = ""
-		// func (r *Request) FormValue(key string) string {
-		// 	location = r.FormValue("location")
-		// }
+		 var location = ""
+		 func (r *Request) FormValue(key string) string {
+		 	location = r.FormValue("location")
+		 }
 
 	router.GET("/query1", func(c *gin.Context) {
 		location := c.Param("location");
