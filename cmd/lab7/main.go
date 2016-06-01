@@ -70,11 +70,7 @@ func main() {
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
-		rows, err := db.Query("SELECT donor, sum(donation.amount) AS donorTotal
-FROM donation JOIN donor ON donation.donorId = donor.id
-WHERE donation.shelterId = shelter_id_goes_here
-GROUP BY donor
-ORDER BY donorTotal DESC") // <--- EDIT THIS LINE
+		rows, err := db.Query("SELECT name, \"desc\" FROM shelter JOIN address ON addressid = address.id WHERE address.city = 'Kansas City' ") // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
 			c.AbortWithError(http.StatusInternalServerError, err)
