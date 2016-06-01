@@ -68,14 +68,14 @@ func main() {
 	//-----------------------------------------------
 
 	router.GET("/query1", func(c *gin.Context) {
-		//location := c.Query("location")
+		location := c.Params.ByName("location")
 		// log.SetOutput(os.Stdout)
 		// log.Printf("This is %s", location)
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
 		//location := r.FormValue("location")
-		rows, err := db.Query(`SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = $1`, "Seattle") // <--- EDIT THIS LINE
+		rows, err := db.Query(`SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = $1`, location) // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
 			c.AbortWithError(http.StatusInternalServerError, err)
