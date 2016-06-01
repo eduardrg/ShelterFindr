@@ -32,12 +32,21 @@ func main() {
 	}
 
 	// Holds the items that're returned for a single shelter
+	// type Shelter struct {
+	// 	Id int `db:"id"`
+	// 	Name 	string  `db:"name"`  // <--- EDIT THESE LINES
+	// 	Desc 	string	`db:"desc"` //<--- ^^^^
+	// 	Phone string	`db:"phone"`
+	// 	Email string 	`db:"email"`//<--- ^^^^
+	// 	Url 	string	`db:"url"`
+	// }
 	type Shelter struct {
-		name 	string      // <--- EDIT THESE LINES
-		desc 	string //<--- ^^^^
-		phone string
-		email string //<--- ^^^^
-		url 	string
+		Id 		int
+		Name 	string
+		Desc 	string
+		Phone string
+		Email string
+		Url 	string
 	}
 
 	var errd error
@@ -48,6 +57,13 @@ func main() {
 		log.Fatalf("Error opening database: %q", errd)
 	}
   dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
+	dbmap.AddTableWithName(Shelter{}, "shelter").SetKeys(true, "Id")
+  // create the table. in a production system you'd generally
+  // use a migration tool, or create the tables via scripts
+  err2 := dbmap.CreateTablesIfNotExists()
+	if err2 != nil {
+		log.Fatalf("Create Table failed: %q", err2)
+	}
 
 	router := gin.New()
 	router.Use(gin.Logger())
@@ -66,18 +82,40 @@ func main() {
 		c.HTML(http.StatusOK, "client.html", nil)
 	})
 
-
-	router.GET("/shelters", func(c *gin.Context) {
-		var shelters []Shelter
-    _, errd := dbmap.Select(&shelters, "SELECT * FROM public.shelter LIMIT 10")
-		if errd != nil {
-			log.Fatalf("Select failed", errd)
+	router.GET("/shelter/:shelter_id", func(c *gin.Context) {
+		log.Println("============\nGetting Shelter\n============")
+		shelter_id := c.Params.ByName("shelter_id")
+		s_id, _ := strconv.Atoi(shelter_id)
+		shelter := Shelter{}
+		err := dbmap.SelectOne(&shelter, "SELECT id, name, shelter.desc, phone, email, url FROM shelter WHERE id=$1", s_id)
+		if err != nil {
+			log.Fatalf("SelectOne failed: %q", err)
 		}
-    content := gin.H{}
-    for k, v := range shelters {
-        content[strconv.Itoa(k)] = v
-    }
-    c.JSON(200, content)
+		content := gin.H{"name": shelter.Name, "id": shelter.Id, "desc": shelter.Desc,
+											"phone": shelter.Phone, "email": shelter.Email, "url": shelter.Url}
+		c.JSON(200, content)
+	})
+
+	router.POST("/shelter/:shelter_id", func(c *gin.Context) {
+		log.Println("============\nUpdating Shelter\n============")
+		var json Shelter
+		c.Bind(&json)
+		shelter := Shelter{
+			Id:	json.Id,
+			Desc: json.Desc,
+			Phone: json.Phone,
+			Email: json.Email,
+			Name: json.Name,
+			Url: json.Url}
+		log.Printf("JSON:%q", json)
+		count, err := dbmap.Update(&shelter)
+		log.Printf("\nUpdated values: %q", count)
+		if err != nil {
+			log.Fatalf("Update failed: %q", err)
+			c.JSON(500, gin.H{"result": "An error occured"})
+		}
+		c.JSON(200, gin.H{"result":"Success!"})
+
 	})
 
 	router.GET("/ping", func(c *gin.Context) {
@@ -196,6 +234,8 @@ func main() {
 	// NO code should go after this line. it won't ever reach that point
 	router.Run(":" + port)
 }
+
+
 
 /*
 Example of processing a GET request

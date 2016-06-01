@@ -1,1 +1,1 @@
-web: lab7
+web: cmd/lab7/lab7

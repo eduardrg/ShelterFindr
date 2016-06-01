@@ -3,36 +3,73 @@
     <head>
         <meta charset="utf-8">
         <title>Shelter Findr - Admin Page</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="static/main.css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.js"></script>
         <script src="static/admin.js"></script>
     </head>
     <body>
         <!-- I apologize to all the UI designers -->
         <header>
-            <h1>ShelterFindr - Admin Page</h1>
+            <h1>ShelterFindr - Admin Page for Shelter </h1>
             <h2>Eduard Grigoryan, Megh Vakharia, and Brittney Hoy</h2>
         </header>
         <div class="content" id="results">
             <div class="row">
-                <div class="col-md-4" id="firstQuery">
+                <div class="col-md-12" id="shelter1Details">
                     <!-- replace the content in the p block with your question -->
-                    <p>
-                        Which users have purchased ticket(s) for more than one flight and how many times have they made a purchase?
-                    </p>
+                    <h1 id="name"></h1>
+                    <h2 id="desc"></h2>
+                    <h3 id="phoneEmail"></h3>
+                    <h3 id="url"></h3>
+                    <button id="editButton" type="button" class="btn btn-primary btn-lg active">Edit Shelter</button>
                 </div>
-                <div class="col-md-4" id="secondQuery">
-                    <p>
-                        Which users have never made a purchase for less than two tickets in an order and have flown to Atlanta, GA?
-                    </p>
-                </div>
-                <div class="col-md-4" id="thirdQuery">
-                    <p>
-                        What is the total number of tickets that have been purchased for flights whose destinations are in California?
-                    </p>
+
+                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                  <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Edit Shelter Details</h4>
+                      </div>
+                      <div class="modal-body">
+                        <form id="shelterSubmit">
+                          <input type="hidden" name="Id">
+                          <div class="form-group">
+                            <label for="shelterName">Name</label>
+                            <input name="Name" type="text" class="form-control" id="name" placeholder="Name">
+                          </div>
+                          <div class="form-group">
+                            <label for="shelterName">Description</label>
+                            <textarea name="Desc" class="form-control" id="desc"></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="shelterEmail">Email</label>
+                            <input name="Email" type="email" class="form-control" id="email" placeholder="Email">
+                          </div>
+                          <div class="form-group">
+                            <label for="shelterNum">Phone</label>
+                            <input name="Phone" type="tel" class="form-control" id="phone" placeholder="Phone">
+                          </div>
+                          <div class="form-group">
+                            <label for="shelterURL">Website URL</label>
+                            <input name="Url" type="text" class="form-control" id="url" placeholder="URL">
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id="submit" class="btn btn-primary">Submit Updates</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
             </div>
         </div>
+
+
     </body>
 </html>
