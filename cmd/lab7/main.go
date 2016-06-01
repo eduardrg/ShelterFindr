@@ -74,7 +74,7 @@ func main() {
 		// put your query here
 
 		//location := r.FormValue("location")
-		rows, err := db.Query("SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = ?", r.FormValue("location")) // <--- EDIT THIS LINE
+		rows, err := db.Query("SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = ?", *Request.FormValue("location")) // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
 			c.AbortWithError(http.StatusInternalServerError, err)
