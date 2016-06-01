@@ -15,6 +15,8 @@ import (
 	"github.com/gin-gonic/gin"
 	// this lets us connect to Postgres DB's
 	_ "github.com/lib/pq"
+	// this allows us to better format JSON responses
+	"github.com/coopernurse/gorp"
 )
 
 var (
@@ -29,13 +31,24 @@ func main() {
 		log.Fatal("$PORT must be set")
 	}
 
+	// Holds the items that're returned for a single shelter
+	type Shelter struct {
+		name 	string      // <--- EDIT THESE LINES
+		desc 	string //<--- ^^^^
+		phone string
+		email string //<--- ^^^^
+		url 	string
+	}
+
 	var errd error
 	// here we want to open a connection to the database using an environemnt variable.
 	// This isn't the best technique, but it is the simplest one for heroku
-	db, errd = sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	db, errd := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if errd != nil {
 		log.Fatalf("Error opening database: %q", errd)
 	}
+  dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
+
 	router := gin.New()
 	router.Use(gin.Logger())
 	router.LoadHTMLGlob("html/*")
@@ -51,6 +64,20 @@ func main() {
 
 	router.GET("/client", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "client.html", nil)
+	})
+
+
+	router.GET("/shelters", func(c *gin.Context) {
+		var shelters []Shelter
+    _, errd := dbmap.Select(&shelters, "SELECT * FROM public.shelter LIMIT 10")
+		if errd != nil {
+			log.Fatalf("Select failed", errd)
+		}
+    content := gin.H{}
+    for k, v := range shelters {
+        content[strconv.Itoa(k)] = v
+    }
+    c.JSON(200, content)
 	})
 
 	router.GET("/ping", func(c *gin.Context) {
