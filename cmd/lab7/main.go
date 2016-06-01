@@ -68,7 +68,7 @@ func main() {
 	//-----------------------------------------------
 
 	router.GET("/query1", func(c *gin.Context) {
-		location := c.Params.ByName("location")
+		location := c.Query("location")
 		// log.SetOutput(os.Stdout)
 		// log.Printf("This is %s", location)
 		table := "<table class='table'><thead><tr>"
