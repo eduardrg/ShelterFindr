@@ -90,10 +90,13 @@ func main() {
 		}
 	})
 
+	//-----------------------------------------------
+	//   BRITTNEY'S CLIENT VIEW CODE!!!!
+	//-----------------------------------------------
 	router.GET("/query1", func(c *gin.Context) {
 		table := "<table class='table'><thead><tr>"
 		// put your query here
-		rows, err := db.Query("SELECT first, last, COUNT(t.userid) as count FROM tickets t JOIN users u ON t.userid = u.userid GROUP BY first, last HAVING COUNT(t.userid) > 1") // <--- EDIT THIS LINE
+		rows, err := db.Query("SELECT name, desc FROM shelter") // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
 			c.AbortWithError(http.StatusInternalServerError, err)
@@ -109,20 +112,22 @@ func main() {
 		// once you've added all the columns in, close the header
 		table += "</thead><tbody>"
 		// declare all your RETURNED columns here
-		var firstName string      // <--- EDIT THESE LINES
-		var lastName string //<--- ^^^^
-		var countUsers int
+		var name string      // <--- EDIT THESE LINES
+		var description string //<--- ^^^^
+
 		for rows.Next() {
 			// assign each of them, in order, to the parameters of rows.Scan.
 			// preface each variable with &
-			rows.Scan(&firstName, &lastName, &countUsers) // <--- EDIT THIS LINE
+			rows.Scan(&name, &description) // <--- EDIT THIS LINE
 			// can't combine ints and strings in Go. Use strconv.Itoa(int) instead
-			table += "<tr><td>" + firstName + "</td><td>" + lastName + "</td><td>" + strconv.Itoa(countUsers) + "</td></tr>" // <--- EDIT THIS LINE
+			table += "<tr><td>" + name + "</td><td>" + description + "</td></tr>" // <--- EDIT THIS LINE
 		}
 		// finally, close out the body and table
 		table += "</tbody></table>"
 		c.Data(http.StatusOK, "text/html", []byte(table))
 	})
+	//---------------------------------------------------
+	//---------------------------------------------------
 
 	router.GET("/query2", func(c *gin.Context) {
 		table := "<table class='table'><thead><tr>"
