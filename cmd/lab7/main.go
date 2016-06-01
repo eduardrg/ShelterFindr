@@ -67,10 +67,10 @@ func main() {
 	//   BRITTNEY'S CLIENT VIEW CODE!!!!
 	//-----------------------------------------------
 
-	router.GET("/query1", func(c *gin.Context) {
-		location := c.Query("location")
-		log.SetOutput(os.Stdout)
-		log.Printf("This is %s", location)
+	router.GET("/query1", func(c *gin.Context, r * http.Request) {
+		 location := r.URL.Query().Get("location")
+		// log.SetOutput(os.Stdout)
+		// log.Printf("This is %s", location)
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
