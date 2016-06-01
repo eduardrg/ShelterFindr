@@ -33,11 +33,11 @@ func main() {
 
 	// Holds the items that're returned for a single shelter
 	type Shelter struct {
-		name  string // <--- EDIT THESE LINES
-		desc  string //<--- ^^^^
+		name 	string      // <--- EDIT THESE LINES
+		desc 	string //<--- ^^^^
 		phone string
 		email string //<--- ^^^^
-		url   string
+		url 	string
 	}
 
 	var errd error
@@ -47,7 +47,7 @@ func main() {
 	if errd != nil {
 		log.Fatalf("Error opening database: %q", errd)
 	}
-	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
+  dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
 
 	router := gin.New()
 	router.Use(gin.Logger())
@@ -66,17 +66,18 @@ func main() {
 		c.HTML(http.StatusOK, "client.html", nil)
 	})
 
+
 	router.GET("/shelters", func(c *gin.Context) {
 		var shelters []Shelter
-		_, errd := dbmap.Select(&shelters, "SELECT * FROM public.shelter LIMIT 10")
+    _, errd := dbmap.Select(&shelters, "SELECT * FROM public.shelter LIMIT 10")
 		if errd != nil {
 			log.Fatalf("Select failed", errd)
 		}
-		content := gin.H{}
-		for k, v := range shelters {
-			content[strconv.Itoa(k)] = v
-		}
-		c.JSON(200, content)
+    content := gin.H{}
+    for k, v := range shelters {
+        content[strconv.Itoa(k)] = v
+    }
+    c.JSON(200, content)
 	})
 
 	router.GET("/ping", func(c *gin.Context) {
@@ -92,12 +93,13 @@ func main() {
 	//-----------------------------------------------
 	//   BRITTNEY'S CLIENT VIEW CODE!!!!
 	//-----------------------------------------------
+
 	router.GET("/query1", func(c *gin.Context) {
-		locationInput := func(r *http.Request) { r.FormValue("location") }
+
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
-		rows, err := db.Query("SELECT name, \"desc\" FROM shelter JOIN address ON shelter.addressId = address.id"+"JOIN state ON state.abbrev = address.stateAbbrev WHERE zip = $1 OR abbrev = $1 OR city = $1 OR"+"\"full\"= $1", locationInput) // <--- EDIT THIS LINE
+		rows, err := db.Query("SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = 'Seattle'") // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
 			c.AbortWithError(http.StatusInternalServerError, err)
@@ -113,7 +115,7 @@ func main() {
 		// once you've added all the columns in, close the header
 		table += "</thead><tbody>"
 		// declare all your RETURNED columns here
-		var name string        // <--- EDIT THESE LINES
+		var name string      // <--- EDIT THESE LINES
 		var description string //<--- ^^^^
 
 		for rows.Next() {
@@ -127,14 +129,12 @@ func main() {
 		table += "</tbody></table>"
 		c.Data(http.StatusOK, "text/html", []byte(table))
 	})
-	//---------------------------------------------------
-	//---------------------------------------------------
 
 	router.GET("/query2", func(c *gin.Context) {
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
-		rows, err := db.Query("SELECT first, last FROM tickets t JOIN users u on t.userid = u.userid JOIN flights f on t.flightid = f.flightid JOIN locations l ON l.locationid = f.destinationid WHERE l.city = 'Atlanta' AND l.state = 'GA' GROUP BY first, last HAVING MIN(quantity) > 2") // <--- EDIT THIS LINE
+		rows, err := db.Query("SELECT name, desc, url FROM shelter") // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
 			c.AbortWithError(http.StatusInternalServerError, err)
@@ -163,35 +163,35 @@ func main() {
 		c.Data(http.StatusOK, "text/html", []byte(table))
 	})
 
-	router.GET("/query3", func(c *gin.Context) {
-		table := "<table class='table'><thead><tr>"
-		// put your query here
-		rows, err := db.Query("SELECT SUM(quantity) FROM tickets t JOIN flights f ON t.flightid = f.flightid WHERE f.destinationid IN (SELECT locationid FROM locations WHERE state = 'CA')") // <--- EDIT THIS LINE
-		if err != nil {
-			// careful about returning errors to the user!
-			c.AbortWithError(http.StatusInternalServerError, err)
-		}
-		// foreach loop over rows.Columns, using value
-		cols, _ := rows.Columns()
-		if len(cols) == 0 {
-			c.AbortWithStatus(http.StatusNoContent)
-		}
-		for _, value := range cols {
-			table += "<th class='text-center'>" + value + "</th>"
-		}
-		// once you've added all the columns in, close the header
-		table += "</thead><tbody>"
-		// columns
-		var total int
-		for rows.Next() {
-			rows.Scan(&total)
-			// rows.Scan() // put columns here prefaced with &
-			table += "<tr><td>" + strconv.Itoa(total) + "</td></tr>" // <--- EDIT THIS LINE
-		}
-		// finally, close out the body and table
-		table += "</tbody></table>"
-		c.Data(http.StatusOK, "text/html", []byte(table))
-	})
+	// router.GET("/query3", func(c *gin.Context) {
+	// 	table := "<table class='table'><thead><tr>"
+	// 	// put your query here
+	// 	rows, err := db.Query("") // <--- EDIT THIS LINE
+	// 	if err != nil {
+	// 		// careful about returning errors to the user!
+	// 		c.AbortWithError(http.StatusInternalServerError, err)
+	// 	}
+	// 	// foreach loop over rows.Columns, using value
+	// 	cols, _ := rows.Columns()
+	// 	if len(cols) == 0 {
+	// 		c.AbortWithStatus(http.StatusNoContent)
+	// 	}
+	// 	for _, value := range cols {
+	// 		table += "<th class='text-center'>" + value + "</th>"
+	// 	}
+	// 	// once you've added all the columns in, close the header
+	// 	table += "</thead><tbody>"
+	// 	// columns
+	// 	var total int
+	// 	for rows.Next() {
+	// 		rows.Scan(&total)
+	// 		// rows.Scan() // put columns here prefaced with &
+	// 		table += "<tr><td>" + strconv.Itoa(total) + "</td></tr>" // <--- EDIT THIS LINE
+	// 	}
+	// 	// finally, close out the body and table
+	// 	table += "</tbody></table>"
+	// 	c.Data(http.StatusOK, "text/html", []byte(table))
+	// })
 
 	// NO code should go after this line. it won't ever reach that point
 	router.Run(":" + port)
