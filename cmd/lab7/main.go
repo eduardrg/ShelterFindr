@@ -69,7 +69,6 @@ func main() {
 	router.GET("/query1", func(c *gin.Context) {
 		table := "<table class='table'><thead><tr>"
 		// put your query here
-		log.Println('REACHED');
 
 		rows, err := db.Query("SELECT name, desc FROM shelter") // <--- EDIT THIS LINE
 		if err != nil {
