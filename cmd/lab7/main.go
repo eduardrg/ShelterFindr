@@ -70,7 +70,7 @@ func main() {
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
-		rows, err := db.Query("SELECT s.name, s.desc FROM shelter s JOIN address a ON s.addressId = a.id WHERE a.city LIKE \"%%u%%\"") // <--- EDIT THIS LINE
+		rows, err := db.Query("SELECT s.name, s.desc FROM shelter s JOIN address a ON (s.addressId = a.id) WHERE a.city LIKE \"Vienne\"") // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
 			c.AbortWithError(http.StatusInternalServerError, err)
