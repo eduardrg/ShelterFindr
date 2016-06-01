@@ -66,11 +66,18 @@ func main() {
 	//-----------------------------------------------
 	//   BRITTNEY'S CLIENT VIEW CODE!!!!
 	//-----------------------------------------------
+
+
+
 	router.GET("/query1", func(c *gin.Context) {
 		table := "<table class='table'><thead><tr>"
 		// put your query here
+		func getLocation(c web.C, w http.ResponseWriter, r *http.Request){
+		    name := r.GetFormValue("location")
+		    fmt.Fprintf(w, "Hello, %s!", name)
+		}
 
-		rows, err := db.Query("SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = 'Seattle'") // <--- EDIT THIS LINE
+		rows, err := db.Query("SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = ?", getLocation) // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
 			c.AbortWithError(http.StatusInternalServerError, err)
