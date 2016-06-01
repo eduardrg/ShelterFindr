@@ -115,7 +115,6 @@ func main() {
 			c.JSON(500, gin.H{"result": "An error occured"})
 		}
 		c.JSON(200, gin.H{"result":"Success!"})
-
 	})
 
 	router.GET("/ping", func(c *gin.Context) {
@@ -133,14 +132,11 @@ func main() {
 	//-----------------------------------------------
 
 	router.GET("/query1", func(c *gin.Context) {
-		location := c.Query("location")
-		// log.SetOutput(os.Stdout)
-		// log.Printf("This is %s", location)
+
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
-		//location := r.FormValue("location")
-		rows, err := db.Query(`SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = $1`, location) // <--- EDIT THIS LINE
+		rows, err := db.Query("SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = 'Seattle'") // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
 			c.AbortWithError(http.StatusInternalServerError, err)
@@ -170,14 +166,12 @@ func main() {
 		table += "</tbody></table>"
 		c.Data(http.StatusOK, "text/html", []byte(table))
 	})
-	//---------------------------------------------------
-	//---------------------------------------------------
 
 	router.GET("/query2", func(c *gin.Context) {
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
-		rows, err := db.Query("SELECT first, last FROM tickets t JOIN users u on t.userid = u.userid JOIN flights f on t.flightid = f.flightid JOIN locations l ON l.locationid = f.destinationid WHERE l.city = 'Atlanta' AND l.state = 'GA' GROUP BY first, last HAVING MIN(quantity) > 2") // <--- EDIT THIS LINE
+		rows, err := db.Query("SELECT name, desc, url FROM shelter") // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
 			c.AbortWithError(http.StatusInternalServerError, err)
@@ -206,35 +200,35 @@ func main() {
 		c.Data(http.StatusOK, "text/html", []byte(table))
 	})
 
-	router.GET("/query3", func(c *gin.Context) {
-		table := "<table class='table'><thead><tr>"
-		// put your query here
-		rows, err := db.Query("SELECT SUM(quantity) FROM tickets t JOIN flights f ON t.flightid = f.flightid WHERE f.destinationid IN (SELECT locationid FROM locations WHERE state = 'CA')") // <--- EDIT THIS LINE
-		if err != nil {
-			// careful about returning errors to the user!
-			c.AbortWithError(http.StatusInternalServerError, err)
-		}
-		// foreach loop over rows.Columns, using value
-		cols, _ := rows.Columns()
-		if len(cols) == 0 {
-			c.AbortWithStatus(http.StatusNoContent)
-		}
-		for _, value := range cols {
-			table += "<th class='text-center'>" + value + "</th>"
-		}
-		// once you've added all the columns in, close the header
-		table += "</thead><tbody>"
-		// columns
-		var total int
-		for rows.Next() {
-			rows.Scan(&total)
-			// rows.Scan() // put columns here prefaced with &
-			table += "<tr><td>" + strconv.Itoa(total) + "</td></tr>" // <--- EDIT THIS LINE
-		}
-		// finally, close out the body and table
-		table += "</tbody></table>"
-		c.Data(http.StatusOK, "text/html", []byte(table))
-	})
+	// router.GET("/query3", func(c *gin.Context) {
+	// 	table := "<table class='table'><thead><tr>"
+	// 	// put your query here
+	// 	rows, err := db.Query("") // <--- EDIT THIS LINE
+	// 	if err != nil {
+	// 		// careful about returning errors to the user!
+	// 		c.AbortWithError(http.StatusInternalServerError, err)
+	// 	}
+	// 	// foreach loop over rows.Columns, using value
+	// 	cols, _ := rows.Columns()
+	// 	if len(cols) == 0 {
+	// 		c.AbortWithStatus(http.StatusNoContent)
+	// 	}
+	// 	for _, value := range cols {
+	// 		table += "<th class='text-center'>" + value + "</th>"
+	// 	}
+	// 	// once you've added all the columns in, close the header
+	// 	table += "</thead><tbody>"
+	// 	// columns
+	// 	var total int
+	// 	for rows.Next() {
+	// 		rows.Scan(&total)
+	// 		// rows.Scan() // put columns here prefaced with &
+	// 		table += "<tr><td>" + strconv.Itoa(total) + "</td></tr>" // <--- EDIT THIS LINE
+	// 	}
+	// 	// finally, close out the body and table
+	// 	table += "</tbody></table>"
+	// 	c.Data(http.StatusOK, "text/html", []byte(table))
+	// })
 
 	// NO code should go after this line. it won't ever reach that point
 	router.Run(":" + port)

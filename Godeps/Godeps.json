@@ -1,11 +1,13 @@
 {
-	"ImportPath": "github.com/bkhoy/lab6-7",
+	"ImportPath": "github.com/eduardrg/ShelterFindr",
 	"GoVersion": "go1.6",
-	"GodepVersion": "v62",
-	"Packages": [
-		"./..."
-	],
+	"GodepVersion": "v73",
 	"Deps": [
+		{
+			"ImportPath": "github.com/coopernurse/gorp",
+			"Comment": "1.2-90-g9cd2b5e",
+			"Rev": "9cd2b5ef5b82fde4e7c51776ac3f94398b8af076"
+		},
 		{
 			"ImportPath": "github.com/gin-gonic/gin",
 			"Comment": "v1.0rc1-266-g542be2f",
