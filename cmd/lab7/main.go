@@ -67,13 +67,13 @@ func main() {
 	//   BRITTNEY'S CLIENT VIEW CODE!!!!
 	//-----------------------------------------------
 
+		// var location = ""
+		// func (r *Request) FormValue(key string) string {
+		// 	location = r.FormValue("location")
+		// }
 
-
-	router.GET("/query1", func(c *gin.Context) {
-		var location = ""
-		func (r *Request) FormValue(key string) string {
-			location = r.FormValue("location")
-		}
+	router.GET("/query1", func(c *gin.Context, r *http.Request) {
+		location := r.FormValue("location");
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
