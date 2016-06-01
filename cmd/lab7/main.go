@@ -63,6 +63,45 @@ func main() {
 		}
 	})
 
+	//-----------------------------------------------
+	//   BRITTNEY'S CLIENT VIEW CODE!!!!
+	//-----------------------------------------------
+	router.GET("/query1", func(c *gin.Context) {
+		table := "<table class='table'><thead><tr>"
+		// put your query here
+		rows, err := db.Query("SELECT name, desc FROM shelter") // <--- EDIT THIS LINE
+		if err != nil {
+			// careful about returning errors to the user!
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
+		// foreach loop over rows.Columns, using value
+		cols, _ := rows.Columns()
+		if len(cols) == 0 {
+			c.AbortWithStatus(http.StatusNoContent)
+		}
+		for _, value := range cols {
+			table += "<th class='text-center'>" + value + "</th>"
+		}
+		// once you've added all the columns in, close the header
+		table += "</thead><tbody>"
+		// declare all your RETURNED columns here
+		var name string      // <--- EDIT THESE LINES
+		var description string //<--- ^^^^
+
+		for rows.Next() {
+			// assign each of them, in order, to the parameters of rows.Scan.
+			// preface each variable with &
+			rows.Scan(&name, &description) // <--- EDIT THIS LINE
+			// can't combine ints and strings in Go. Use strconv.Itoa(int) instead
+			table += "<tr><td>" + name + "</td><td>" + description + "</td></tr>" // <--- EDIT THIS LINE
+		}
+		// finally, close out the body and table
+		table += "</tbody></table>"
+		c.Data(http.StatusOK, "text/html", []byte(table))
+	})
+	//---------------------------------------------------
+	//---------------------------------------------------
+
 	router.GET("/query1", func(c *gin.Context) {
 		table := "<table class='table'><thead><tr>"
 		// put your query here
