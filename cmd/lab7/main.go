@@ -73,7 +73,7 @@ func main() {
 		// }
 
 	router.GET("/query1", func(c *gin.Context) {
-		location := c.Request.URL.Query().Get("location");
+		location := c.Query("location");
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
