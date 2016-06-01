@@ -17,4 +17,4 @@ $(function(){
         $("#thirdQuery").append(data);
     }, "html")
 
-})
+});
