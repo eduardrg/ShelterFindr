@@ -72,8 +72,8 @@ func main() {
 		// 	location = r.FormValue("location")
 		// }
 
-	router.GET("/query1", func(c *gin.Context, r *http.Request) {
-		location := r.FormValue("location");
+	router.GET("/query1", func(c *gin.Context) {
+		location := c.Request.URL.Query().Get("location");
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
