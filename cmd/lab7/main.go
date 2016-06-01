@@ -69,6 +69,8 @@ func main() {
 	router.GET("/query1", func(c *gin.Context) {
 		table := "<table class='table'><thead><tr>"
 		// put your query here
+		log.Println('REACHED');
+
 		rows, err := db.Query("SELECT name, desc FROM shelter") // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
@@ -105,6 +107,7 @@ func main() {
 	router.GET("/query2", func(c *gin.Context) {
 		table := "<table class='table'><thead><tr>"
 		// put your query here
+
 		rows, err := db.Query("SELECT first, last FROM tickets t JOIN users u on t.userid = u.userid JOIN flights f on t.flightid = f.flightid JOIN locations l ON l.locationid = f.destinationid WHERE l.city = 'Atlanta' AND l.state = 'GA' GROUP BY first, last HAVING MIN(quantity) > 2") // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
