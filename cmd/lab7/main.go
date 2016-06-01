@@ -16,8 +16,7 @@ import (
 	// this lets us connect to Postgres DB's
 	_ "github.com/lib/pq"
 	// this allows us to better format JSON responses
-	"github.com/coopernurse/gorp"
-)
+
 
 var (
 	// this is the pointer to the database we will be working with
