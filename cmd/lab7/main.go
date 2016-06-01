@@ -14,9 +14,10 @@ import (
 	// this allows us to run our web server
 	"github.com/gin-gonic/gin"
 	// this lets us connect to Postgres DB's
-	"github.com/lib/pq"
+	_ "github.com/lib/pq"
 	// this allows us to better format JSON responses
-
+	"github.com/coopernurse/gorp"
+)
 
 var (
 	// this is the pointer to the database we will be working with
@@ -32,11 +33,11 @@ func main() {
 
 	// Holds the items that're returned for a single shelter
 	type Shelter struct {
-		name 	string      // <--- EDIT THESE LINES
-		desc 	string //<--- ^^^^
+		name  string // <--- EDIT THESE LINES
+		desc  string //<--- ^^^^
 		phone string
 		email string //<--- ^^^^
-		url 	string
+		url   string
 	}
 
 	var errd error
@@ -46,7 +47,7 @@ func main() {
 	if errd != nil {
 		log.Fatalf("Error opening database: %q", errd)
 	}
-  dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
+	dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
 
 	router := gin.New()
 	router.Use(gin.Logger())
@@ -65,18 +66,17 @@ func main() {
 		c.HTML(http.StatusOK, "client.html", nil)
 	})
 
-
 	router.GET("/shelters", func(c *gin.Context) {
 		var shelters []Shelter
-    _, errd := dbmap.Select(&shelters, "SELECT * FROM public.shelter LIMIT 10")
+		_, errd := dbmap.Select(&shelters, "SELECT * FROM public.shelter LIMIT 10")
 		if errd != nil {
 			log.Fatalf("Select failed", errd)
 		}
-    content := gin.H{}
-    for k, v := range shelters {
-        content[strconv.Itoa(k)] = v
-    }
-    c.JSON(200, content)
+		content := gin.H{}
+		for k, v := range shelters {
+			content[strconv.Itoa(k)] = v
+		}
+		c.JSON(200, content)
 	})
 
 	router.GET("/ping", func(c *gin.Context) {
@@ -92,14 +92,12 @@ func main() {
 	//-----------------------------------------------
 	//   BRITTNEY'S CLIENT VIEW CODE!!!!
 	//-----------------------------------------------
-	router.GET("/query1", func(c *gin.Context, r *http.Request) {
-		locationInput := r.FormValue("location")
+	router.GET("/query1", func(c *gin.Context) {
+		locationInput := func(r *http.Request) { r.FormValue("location") }
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
-		rows, err := db.Query("SELECT name, \"desc\" FROM shelter JOIN address ON shelter.addressId = address.id"
-			+ "JOIN state ON state.abbrev = address.stateAbbrev WHERE zip = $1 OR abbrev = $1 OR city = $1 OR"
-			+ "\"full\"= $1", locationInput) // <--- EDIT THIS LINE
+		rows, err := db.Query("SELECT name, \"desc\" FROM shelter JOIN address ON shelter.addressId = address.id"+"JOIN state ON state.abbrev = address.stateAbbrev WHERE zip = $1 OR abbrev = $1 OR city = $1 OR"+"\"full\"= $1", locationInput) // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
 			c.AbortWithError(http.StatusInternalServerError, err)
@@ -115,7 +113,7 @@ func main() {
 		// once you've added all the columns in, close the header
 		table += "</thead><tbody>"
 		// declare all your RETURNED columns here
-		var name string      // <--- EDIT THESE LINES
+		var name string        // <--- EDIT THESE LINES
 		var description string //<--- ^^^^
 
 		for rows.Next() {
