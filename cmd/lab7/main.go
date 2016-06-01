@@ -102,105 +102,105 @@ func main() {
 	//---------------------------------------------------
 	//---------------------------------------------------
 
-	router.GET("/query1", func(c *gin.Context) {
-		table := "<table class='table'><thead><tr>"
-		// put your query here
-		rows, err := db.Query("SELECT first, last, COUNT(t.userid) as count FROM tickets t JOIN users u ON t.userid = u.userid GROUP BY first, last HAVING COUNT(t.userid) > 1") // <--- EDIT THIS LINE
-		if err != nil {
-			// careful about returning errors to the user!
-			c.AbortWithError(http.StatusInternalServerError, err)
-		}
-		// foreach loop over rows.Columns, using value
-		cols, _ := rows.Columns()
-		if len(cols) == 0 {
-			c.AbortWithStatus(http.StatusNoContent)
-		}
-		for _, value := range cols {
-			table += "<th class='text-center'>" + value + "</th>"
-		}
-		// once you've added all the columns in, close the header
-		table += "</thead><tbody>"
-		// declare all your RETURNED columns here
-		var firstName string      // <--- EDIT THESE LINES
-		var lastName string //<--- ^^^^
-		var countUsers int
-		for rows.Next() {
-			// assign each of them, in order, to the parameters of rows.Scan.
-			// preface each variable with &
-			rows.Scan(&firstName, &lastName, &countUsers) // <--- EDIT THIS LINE
-			// can't combine ints and strings in Go. Use strconv.Itoa(int) instead
-			table += "<tr><td>" + firstName + "</td><td>" + lastName + "</td><td>" + strconv.Itoa(countUsers) + "</td></tr>" // <--- EDIT THIS LINE
-		}
-		// finally, close out the body and table
-		table += "</tbody></table>"
-		c.Data(http.StatusOK, "text/html", []byte(table))
-	})
+// 	router.GET("/query1", func(c *gin.Context) {
+// 		table := "<table class='table'><thead><tr>"
+// 		// put your query here
+// 		rows, err := db.Query("SELECT first, last, COUNT(t.userid) as count FROM tickets t JOIN users u ON t.userid = u.userid GROUP BY first, last HAVING COUNT(t.userid) > 1") // <--- EDIT THIS LINE
+// 		if err != nil {
+// 			// careful about returning errors to the user!
+// 			c.AbortWithError(http.StatusInternalServerError, err)
+// 		}
+// 		// foreach loop over rows.Columns, using value
+// 		cols, _ := rows.Columns()
+// 		if len(cols) == 0 {
+// 			c.AbortWithStatus(http.StatusNoContent)
+// 		}
+// 		for _, value := range cols {
+// 			table += "<th class='text-center'>" + value + "</th>"
+// 		}
+// 		// once you've added all the columns in, close the header
+// 		table += "</thead><tbody>"
+// 		// declare all your RETURNED columns here
+// 		var firstName string      // <--- EDIT THESE LINES
+// 		var lastName string //<--- ^^^^
+// 		var countUsers int
+// 		for rows.Next() {
+// 			// assign each of them, in order, to the parameters of rows.Scan.
+// 			// preface each variable with &
+// 			rows.Scan(&firstName, &lastName, &countUsers) // <--- EDIT THIS LINE
+// 			// can't combine ints and strings in Go. Use strconv.Itoa(int) instead
+// 			table += "<tr><td>" + firstName + "</td><td>" + lastName + "</td><td>" + strconv.Itoa(countUsers) + "</td></tr>" // <--- EDIT THIS LINE
+// 		}
+// 		// finally, close out the body and table
+// 		table += "</tbody></table>"
+// 		c.Data(http.StatusOK, "text/html", []byte(table))
+// 	})
 
-	router.GET("/query2", func(c *gin.Context) {
-		table := "<table class='table'><thead><tr>"
-		// put your query here
-		rows, err := db.Query("SELECT first, last FROM tickets t JOIN users u on t.userid = u.userid JOIN flights f on t.flightid = f.flightid JOIN locations l ON l.locationid = f.destinationid WHERE l.city = 'Atlanta' AND l.state = 'GA' GROUP BY first, last HAVING MIN(quantity) > 2") // <--- EDIT THIS LINE
-		if err != nil {
-			// careful about returning errors to the user!
-			c.AbortWithError(http.StatusInternalServerError, err)
-		}
-		// foreach loop over rows.Columns, using value
-		cols, _ := rows.Columns()
-		if len(cols) == 0 {
-			c.AbortWithStatus(http.StatusNoContent)
-		}
-		for _, value := range cols {
-			table += "<th class='text-center'>" + value + "</th>"
-		}
-		// once you've added all the columns in, close the header
-		table += "</thead><tbody>"
-		// columns
-		var firstName string
-		var lastName string
+// 	router.GET("/query2", func(c *gin.Context) {
+// 		table := "<table class='table'><thead><tr>"
+// 		// put your query here
+// 		rows, err := db.Query("SELECT first, last FROM tickets t JOIN users u on t.userid = u.userid JOIN flights f on t.flightid = f.flightid JOIN locations l ON l.locationid = f.destinationid WHERE l.city = 'Atlanta' AND l.state = 'GA' GROUP BY first, last HAVING MIN(quantity) > 2") // <--- EDIT THIS LINE
+// 		if err != nil {
+// 			// careful about returning errors to the user!
+// 			c.AbortWithError(http.StatusInternalServerError, err)
+// 		}
+// 		// foreach loop over rows.Columns, using value
+// 		cols, _ := rows.Columns()
+// 		if len(cols) == 0 {
+// 			c.AbortWithStatus(http.StatusNoContent)
+// 		}
+// 		for _, value := range cols {
+// 			table += "<th class='text-center'>" + value + "</th>"
+// 		}
+// 		// once you've added all the columns in, close the header
+// 		table += "</thead><tbody>"
+// 		// columns
+// 		var firstName string
+// 		var lastName string
 
-		for rows.Next() {
-			rows.Scan(&firstName, &lastName)
-			// rows.Scan() // put columns here prefaced with &
-			table += "<tr><td>" + firstName + "</td><td>" + lastName + "</td></tr>" // <--- EDIT THIS LINE
-		}
-		// finally, close out the body and table
-		table += "</tbody></table>"
-		c.Data(http.StatusOK, "text/html", []byte(table))
-	})
+// 		for rows.Next() {
+// 			rows.Scan(&firstName, &lastName)
+// 			// rows.Scan() // put columns here prefaced with &
+// 			table += "<tr><td>" + firstName + "</td><td>" + lastName + "</td></tr>" // <--- EDIT THIS LINE
+// 		}
+// 		// finally, close out the body and table
+// 		table += "</tbody></table>"
+// 		c.Data(http.StatusOK, "text/html", []byte(table))
+// 	})
 
-	router.GET("/query3", func(c *gin.Context) {
-		table := "<table class='table'><thead><tr>"
-		// put your query here
-		rows, err := db.Query("SELECT SUM(quantity) FROM tickets t JOIN flights f ON t.flightid = f.flightid WHERE f.destinationid IN (SELECT locationid FROM locations WHERE state = 'CA')") // <--- EDIT THIS LINE
-		if err != nil {
-			// careful about returning errors to the user!
-			c.AbortWithError(http.StatusInternalServerError, err)
-		}
-		// foreach loop over rows.Columns, using value
-		cols, _ := rows.Columns()
-		if len(cols) == 0 {
-			c.AbortWithStatus(http.StatusNoContent)
-		}
-		for _, value := range cols {
-			table += "<th class='text-center'>" + value + "</th>"
-		}
-		// once you've added all the columns in, close the header
-		table += "</thead><tbody>"
-		// columns
-		var total int
-		for rows.Next() {
-			rows.Scan(&total)
-			// rows.Scan() // put columns here prefaced with &
-			table += "<tr><td>" + strconv.Itoa(total) + "</td></tr>" // <--- EDIT THIS LINE
-		}
-		// finally, close out the body and table
-		table += "</tbody></table>"
-		c.Data(http.StatusOK, "text/html", []byte(table))
-	})
+// 	router.GET("/query3", func(c *gin.Context) {
+// 		table := "<table class='table'><thead><tr>"
+// 		// put your query here
+// 		rows, err := db.Query("SELECT SUM(quantity) FROM tickets t JOIN flights f ON t.flightid = f.flightid WHERE f.destinationid IN (SELECT locationid FROM locations WHERE state = 'CA')") // <--- EDIT THIS LINE
+// 		if err != nil {
+// 			// careful about returning errors to the user!
+// 			c.AbortWithError(http.StatusInternalServerError, err)
+// 		}
+// 		// foreach loop over rows.Columns, using value
+// 		cols, _ := rows.Columns()
+// 		if len(cols) == 0 {
+// 			c.AbortWithStatus(http.StatusNoContent)
+// 		}
+// 		for _, value := range cols {
+// 			table += "<th class='text-center'>" + value + "</th>"
+// 		}
+// 		// once you've added all the columns in, close the header
+// 		table += "</thead><tbody>"
+// 		// columns
+// 		var total int
+// 		for rows.Next() {
+// 			rows.Scan(&total)
+// 			// rows.Scan() // put columns here prefaced with &
+// 			table += "<tr><td>" + strconv.Itoa(total) + "</td></tr>" // <--- EDIT THIS LINE
+// 		}
+// 		// finally, close out the body and table
+// 		table += "</tbody></table>"
+// 		c.Data(http.StatusOK, "text/html", []byte(table))
+// 	})
 
-	// NO code should go after this line. it won't ever reach that point
-	router.Run(":" + port)
-}
+// 	// NO code should go after this line. it won't ever reach that point
+// 	router.Run(":" + port)
+// }
 
 /*
 Example of processing a GET request
