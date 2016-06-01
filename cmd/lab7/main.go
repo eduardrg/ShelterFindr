@@ -70,11 +70,15 @@ func main() {
 
 
 	router.GET("/query1", func(c *gin.Context) {
+		var location = ""
+		func (r *Request) FormValue(key string) string {
+			location = r.FormValue("location")
+		}
 		table := "<table class='table'><thead><tr>"
 		// put your query here
 
 		//location := r.FormValue("location")
-		rows, err := db.Query("SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = ?", *Request.FormValue("location")) // <--- EDIT THIS LINE
+		rows, err := db.Query("SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = ?", location) // <--- EDIT THIS LINE
 		if err != nil {
 			// careful about returning errors to the user!
 			c.AbortWithError(http.StatusInternalServerError, err)
