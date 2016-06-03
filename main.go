@@ -136,17 +136,18 @@ func main() {
 		City 	string
 	}
 
-	router.GET("/client/:client", func(c *gin.Context) {
+	router.GET("/client/:city", func(c *gin.Context) {
 		city := c.Params.ByName("city")
+        log.Print(city)
 
 		var shelters []aShelter
 
-    	rows, err := db.Query("SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = '$1'", city)
-
+        rows, err := db.Query("SELECT s.name, a.city FROM address a INNER JOIN shelter s ON(s.addressId = a.id) WHERE a.city=$1", city)
+        log.Println("Rows Test")
+        log.Println(rows)
         if err != nil {
             c.AbortWithError(http.StatusInternalServerError, err)
         }
-
     	for rows.Next() {
     		var shelter aShelter
 

@@ -33,6 +33,10 @@ body {
     -o-background-size: cover;
 }
 
+#myCarousel {
+    margin-bottom:1000px;
+}
+
 footer {
     margin: 50px 0;
 }
