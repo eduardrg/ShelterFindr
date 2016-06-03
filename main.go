@@ -134,6 +134,11 @@ func main() {
 	type aShelter struct {
 		ShelterName string
 		City 	string
+        Description string
+        Phone string
+        StreetAddress string
+        StateAbbrev string
+        Zip int
 	}
 
 	router.GET("/client/:city", func(c *gin.Context) {
@@ -142,7 +147,8 @@ func main() {
 
 		var shelters []aShelter
 
-        rows, err := db.Query("SELECT s.name, a.city FROM address a INNER JOIN shelter s ON(s.addressId = a.id) WHERE a.city=$1", city)
+        // rows, err := db.Query("SELECT s.name, a.city FROM address a INNER JOIN shelter s ON(s.addressId = a.id) WHERE a.city=$1", city)
+        rows, err := db.Query("SELECT s.name, s.desc, s.phone, a.streetAddress1, a.city, a.stateAbbrev, a.zip FROM shelter AS s, address AS a WHERE s.addressId = a.id AND a.city = $1", city)
         log.Println("Rows Test")
         log.Println(rows)
         if err != nil {
@@ -151,7 +157,7 @@ func main() {
     	for rows.Next() {
     		var shelter aShelter
 
-			rows.Scan(&shelter.ShelterName, &shelter.City)
+			rows.Scan(&shelter.ShelterName, &shelter.City, &shelter.Description, &shelter.Phone, &shelter.StreetAddress, &shelter.StateAbbrev, &shelter.Zip)
 
 			shelters = append(shelters, shelter)
     	}

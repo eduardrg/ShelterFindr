@@ -20,16 +20,17 @@ $(function(){
 
     $('#submit').click(function(e) {
         city = $("#city").val();
-        alert(city)
 
         $.get("/client/" + city)
             .then(function(data) {
                 console.log(data)
-            $('#firstQuery').append("<thead><tr><th>Shelter Name</th><th>City</th></tr></thead>");
+            $('#firstQuery').append("<thead><tr><th>Shelter Name</th><th>City</th><<th>Description</th><th>Phone</th><th>StreetAddress</th><th>StateAbbrev</th><th>Zip</th>/tr></thead><tbody>");
        // <th>Address</th>" +
        //          "<th>City</th><th>Resources</th><th>Amenities</th>
-            $('#firstQuery').append('<tr><td>' + data.City + '</td></tr></tbody>')
-            $('#firstQuery').append("<tbody>");
+            for (var i = 0; i < data.length; i++) {
+                $('#firstQuery').append('<tr><td>' + data[i].ShelterName + '</td><td>' + data[i].City + '</td><td>' + data[i].Description + '</td><td>' + data[i].Phone + '</td><td>' + data[i].StreetAddress + '</td><td>' + data[i].StateAbbrev + '</td><td>' + data[i].Zip + '</td></tr>')
+            }
+            $('#firstQuery').append("</tbody>");
         })
         // .then((function(data) { 
         // $('#submit').click(function(e) {
