@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+ 	"encoding/json"
 
 	// this allows us to run our web server
 	"github.com/gin-gonic/gin"
@@ -57,7 +58,7 @@ func main() {
 		log.Fatalf("Error opening database: %q", errd)
 	}
   dbmap := &gorp.DbMap{Db: db, Dialect: gorp.PostgresDialect{}}
-	dbmap.AddTableWithName(Shelter{}, "shelter").SetKeys(true, "Id")
+  dbmap.AddTableWithName(Shelter{}, "shelter").SetKeys(true, "Id")
   // create the table. in a production system you'd generally
   // use a migration tool, or create the tables via scripts
   err2 := dbmap.CreateTablesIfNotExists()
@@ -96,6 +97,16 @@ func main() {
 		c.JSON(200, content)
 	})
 
+	router.GET("/ping", func(c *gin.Context) {
+		ping := db.Ping()
+		if ping != nil {
+			// our site can't handle http status codes, but I'll still put them in cause why not
+			c.JSON(http.StatusOK, gin.H{"error": "true", "message": "db was not created. Check your DATABASE_URL"})
+		} else {
+			c.JSON(http.StatusOK, gin.H{"error": "false", "message": "db created"})
+		}
+	})
+
 	router.POST("/shelter/:shelter_id", func(c *gin.Context) {
 		log.Println("============\nUpdating Shelter\n============")
 		var json Shelter
@@ -117,87 +128,54 @@ func main() {
 		c.JSON(200, gin.H{"result":"Success!"})
 	})
 
-	router.GET("/ping", func(c *gin.Context) {
-		ping := db.Ping()
-		if ping != nil {
-			// our site can't handle http status codes, but I'll still put them in cause why not
-			c.JSON(http.StatusOK, gin.H{"error": "true", "message": "db was not created. Check your DATABASE_URL"})
-		} else {
-			c.JSON(http.StatusOK, gin.H{"error": "false", "message": "db created"})
-		}
-	})
-
 	//-----------------------------------------------
-	//   BRITTNEY'S CLIENT VIEW CODE!!!!
+	//   BRITTNEY'S CLIENT VIEW CODE
 	//-----------------------------------------------
+	type aShelter struct {
+		ShelterName string
+		City 	string
+	}
 
-	router.GET("/query1", func(c *gin.Context) {
+	router.GET("/client/:client", func(c *gin.Context) {
+		city := c.Params.ByName("city")
 
-		table := "<table class='table'><thead><tr>"
-		// put your query here
+		var shelters []aShelter
 
-		rows, err := db.Query("SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = 'Seattle'") // <--- EDIT THIS LINE
-		if err != nil {
-			// careful about returning errors to the user!
-			c.AbortWithError(http.StatusInternalServerError, err)
-		}
-		// foreach loop over rows.Columns, using value
-		cols, _ := rows.Columns()
-		if len(cols) == 0 {
-			c.AbortWithStatus(http.StatusNoContent)
-		}
-		for _, value := range cols {
-			table += "<th class='text-center'>" + value + "</th>"
-		}
-		// once you've added all the columns in, close the header
-		table += "</thead><tbody>"
-		// declare all your RETURNED columns here
-		var name string      // <--- EDIT THESE LINES
-		var description string //<--- ^^^^
+    	rows, err := db.Query("SELECT s.name, a.city FROM shelter s, address a WHERE s.addressId = a.id AND a.city = '$1'", city)
 
-		for rows.Next() {
-			// assign each of them, in order, to the parameters of rows.Scan.
-			// preface each variable with &
-			rows.Scan(&name, &description) // <--- EDIT THIS LINE
-			// can't combine ints and strings in Go. Use strconv.Itoa(int) instead
-			table += "<tr><td>" + name + "</td><td>" + description + "</td></tr>" // <--- EDIT THIS LINE
-		}
-		// finally, close out the body and table
-		table += "</tbody></table>"
-		c.Data(http.StatusOK, "text/html", []byte(table))
-	})
+        if err != nil {
+            c.AbortWithError(http.StatusInternalServerError, err)
+        }
 
-	router.GET("/query2", func(c *gin.Context) {
-		table := "<table class='table'><thead><tr>"
-		// put your query here
+    	for rows.Next() {
+    		var shelter aShelter
 
-		rows, err := db.Query("SELECT name, desc, url FROM shelter") // <--- EDIT THIS LINE
-		if err != nil {
-			// careful about returning errors to the user!
-			c.AbortWithError(http.StatusInternalServerError, err)
-		}
-		// foreach loop over rows.Columns, using value
-		cols, _ := rows.Columns()
-		if len(cols) == 0 {
-			c.AbortWithStatus(http.StatusNoContent)
-		}
-		for _, value := range cols {
-			table += "<th class='text-center'>" + value + "</th>"
-		}
-		// once you've added all the columns in, close the header
-		table += "</thead><tbody>"
-		// columns
-		var firstName string
-		var lastName string
+			rows.Scan(&shelter.ShelterName, &shelter.City)
 
-		for rows.Next() {
-			rows.Scan(&firstName, &lastName)
-			// rows.Scan() // put columns here prefaced with &
-			table += "<tr><td>" + firstName + "</td><td>" + lastName + "</td></tr>" // <--- EDIT THIS LINE
-		}
-		// finally, close out the body and table
-		table += "</tbody></table>"
-		c.Data(http.StatusOK, "text/html", []byte(table))
+			shelters = append(shelters, shelter)
+    	}
+
+        c.JSON(200, shelters)
+    //     // if you are simply inserting data you can stop here. I'd suggest returning a JSON object saying "insert successful" or something along those lines.
+    //     // get all the columns. You can do something with them here if you like, such as adding them to a table header, or adding them to the JSON
+    //     cols, _ := rows.Columns()
+    //     if len(cols) == 0 {
+    //         c.AbortWithStatus(http.StatusNoContent)
+    //         return
+    //     }
+    //     // This will hold an array of all values
+    //     // makes an array of size 1, storing strings (replace with int or whatever data you want to store)
+    //     output := make([]string, 1)
+
+    // // The variable(s) here should match your returned columns in the EXACT same order as you give them in your query
+    //     var returnedColumn1 string
+    //     for rows.Next() {
+    //         rows.Scan(&returnedColumn1)
+    //         // VERY important that you store the result back in output
+    //         output = append(output, returnedColumn1)
+    //     }
+    //     //Finally, return your results to the user:
+    // 	c.JSON(http.StatusOK, gin.H{"result": output})
 	})
 
 	// router.GET("/query3", func(c *gin.Context) {
