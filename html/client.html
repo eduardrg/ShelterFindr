@@ -16,44 +16,23 @@
         </header>
         
         <!-- Search stuff -->
-        <section>
-            <form method="GET">
-                Location: <input type="text" name="location">
-                <input type="submit" class="btn btn-success" value="Find a Shelter">
+        <section class="container">
+            <form id="searching">
+                City: <input type="text" name="city" id="city" >
+                <button type="submit" class="btn btn-success" value="Find a Shelter" id="submit">Search</button>
             </form>
         </section>
 
         <!-- Display search results -->
         <div class="content" id="results">
-            <div class="row">
-                <div class="col-md-6" id="firstQuery">
+            <div class="col-md-6">
+                <table id="firstQuery">
                     <!-- replace the content in the p block with your question -->
-                    <p>
-                        Show the shelter table!
-                    </p>
-                </div>
+                </table>
             </div>
         </div>
 
-        <section>
-            <form method="GET">
-                Location: <input type="text" name="location"><br>
-                Resources: <input type="text" name="location"><br>
-                Ammenities: <input type="text" name="location"><br>
-                Group Name: <input type="text" name="location">
-                <input type="submit" class="btn btn-success" value="Find a Shelter">
-            </form>
-        </section>
 
-                <div class="content" id="results">
-            <div class="row">
-                <div class="col-md-6" id="secondQuery">
-                    <!-- replace the content in the p block with your question -->
-                    <p>
-                        Show the shelter table!
-                    </p>
-                </div>
-            </div>
-        </div>
+
     </body>
 </html>

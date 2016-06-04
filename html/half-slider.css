@@ -1,0 +1,124 @@
+/*!
+ * Start Bootstrap - Half Slider HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+html,
+body {
+    height: 100%;
+}
+
+/* You can change the height of the carousel by changing the height in the class below. It is set to 50% by default, but can be any height! */
+
+.carousel {
+    height: 50%;
+}
+
+.item,
+.active,
+.carousel-inner {
+    height: 100%;
+}
+
+/* Background images are set within the HTML using inline CSS, not here */
+
+.fill {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+#myCarousel {
+    margin-bottom:1000px;
+}
+
+footer {
+    margin: 50px 0;
+}
+.navbar-brand {
+    color: white;
+}
+.navbar {
+    color: white;
+    opacity: 0.8;
+}
+.carousel-caption h2{
+    font-size: 40px;
+    padding-bottom: 70px;
+}
+
+#name h1{
+    font-size: 30px;
+}
+#name p {
+    margin-bottom: 2px;
+}
+
+#self {
+    height: 200px;
+    display: block;
+    margin: auto;
+}
+
+.linkpic {
+    display:block;
+    margin: auto;
+}
+
+.thumbnail {
+    padding: 10px;
+    height: 250px;
+    display: block;
+    margin: auto;
+}
+
+#content {
+    border-radius: 25px;
+    box-shadow: 10px 10px 5px #888888;
+    padding: 50px;
+    padding-left: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 60px;
+}
+
+.col-md-6 {
+    margin-top: 40px;
+}
+
+.col-md-6 h2 {
+    text-align: center;
+    font-size: 16pt;
+}
+
+@media screen and (min-width: 1200px) {
+    .carousel-caption h2{
+        font-size: 75px;
+        padding-bottom: 70px;
+    }
+
+    #name h1{
+        font-size: 40px;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .carousel-caption h2{
+        font-size: 55px;
+        padding-bottom: 70px;
+    }
+    #self {
+        margin-top:50px;
+        height: 350px;
+    }
+
+    .col-md-6 h2 {
+        text-align: center;
+        font-size: 20pt;
+    }
+}

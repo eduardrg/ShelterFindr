@@ -16,22 +16,17 @@
         <header>
             <h1>ShelterFindr - Admin Page for Shelter <ku/h1>
         </header>
+
+
+
+
         <div class="content" id="results">
             <div class="row">
-                <div class="col-md-12" id="shelter1Details">
-                    <!-- replace the content in the p block with your question -->
-                    <h1 id="name"></h1>
-                    <h2 id="desc"></h2>
-                    <h3 id="phoneEmail"></h3>
-                    <h3 id="url"></h3>
-                    <button id="editButton" type="button" class="btn btn-primary btn-lg active">Edit Shelter</button>
-                </div>
                 <div class="center-table">
                   <table class="table table-hover">
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>Address</th>
                       <th>Description</th>
                       <th>Phone</th>
                       <th>Email</th>
@@ -39,11 +34,14 @@
                       <th>Actions</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
+                  <tbody id="shelter-table">
+                    <tr id="shelter-row-tpl" class="hidden">
+                      <th id="name"></th>
+                      <th id="desc"></th>
+                      <th id="phone"></th>
+                      <th id="email"></th>
+                      <th id="url"></th>
+                      <th><button type="button" class="editButton btn btn-primary btn-lg active">Edit</button></th>
                     </tr>
                   </tbody>
                 </table>

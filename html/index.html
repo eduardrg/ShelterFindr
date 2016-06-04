@@ -3,21 +3,71 @@
     <head>
         <meta charset="utf-8">
         <title>ShelterFindr</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+
+                  <link rel="stylesheet" href="static/half-slider.css" >
         <link rel="stylesheet" href="static/main.css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.js"></script>
+            
+       <!-- jQuery library -->
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+        <script src="static/jquery.js"></script>
         <script src="static/main.js"></script>
+        <script src="static/bootstrap.min.js"></script>
     </head>
     <body>
-        <!-- I apologize to all the UI designers -->
-        <header>
-            <h1>ShelterFindr</h1>
-            <h2>Eduard Grigoryan, Megh Vakharia, and Brittney Hoy</h2>
-        </header>
+      <h1>ShelterFindr</h1>
+    <!-- Half Page Image Background Carousel Header -->
+    <header id="myCarousel" class="carousel slide">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+
+        <!-- Wrapper for Slides -->
+        <div class="carousel-inner">
+            <div class="item active">
+                <!-- Set the first background image using inline CSS below. -->
+                <div class="fill" style="background-image:url('static/sunrise.jpg');"></div>
+                <div class="carousel-caption">
+                    <h2>There's always hope -- find the shelter that's right for you</h2>
+                </div>
+            </div>
+            <div class="item">
+                <!-- Set the second background image using inline CSS below. -->
+                <div class="fill" style="background-image:url('static/bw-room.jpeg');"></div>
+                <div class="carousel-caption">
+                    <h2>You're not alone</h2>
+                </div>
+            </div>
+            <div class="item">
+                <!-- Set the third background image using inline CSS below. -->
+                <div class="fill" style="background-image:url('static/homeless.jpg');"></div>
+                <div class="carousel-caption">
+                    <h2>Fight Homelessness</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="icon-prev"></span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="icon-next"></span>
+        </a>
+
+    </header>
+        <div id="bar"></div>
         <div class="content" id="results">
+          <h1>Welcome to ShelterFindr!</h1>
+          <p>Please tell us who you are so we can better serve your needs!</p>
             <div class="row">
-                <a href="/admin" type="button" class="btn btn-primary btn-lg active">For Admins</a>
-                <a href="/client" type="button" class="btn btn-primary btn-lg active">For Clients</a>
+                <a href="/admin" type="button" class="btn btn-default btn-lg">I am an Administrator</a>
+                <img id="house" src="static/shelter.png" alt="Shelter Heart">
+                <a href="/client" type="button" class="btn btn-primary btn-lg">I am looking for a shelter</a>
             </div>
         </div>
     </body>

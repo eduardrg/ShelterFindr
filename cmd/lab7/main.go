@@ -82,6 +82,24 @@ func main() {
 		c.HTML(http.StatusOK, "client.html", nil)
 	})
 
+	router.GET("/shelter", func(c *gin.Context) {
+		log.Println("============\nGetting All Shelters\n============")
+		var shelters []Shelter
+    _, err := dbmap.Select(&shelters, "SELECT id, name, shelter.desc, phone, email, url FROM shelter where shelter.desc != '' and name != '' and phone != '' and email != '' and url != '' LIMIT 50")
+		if err != nil {
+			log.Fatalf("Select failed: %q", err)
+		}
+    content := gin.H{}
+    for k, v := range shelters {
+			if &v == nil {
+				content[strconv.Itoa(k)] = ""
+			} else {
+				content[strconv.Itoa(k)] = v
+			}
+    }
+    c.JSON(200, content)
+	})
+
 	router.GET("/shelter/:shelter_id", func(c *gin.Context) {
 		log.Println("============\nGetting Shelter\n============")
 		shelter_id := c.Params.ByName("shelter_id")
