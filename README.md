@@ -1,5 +1,19 @@
 # Welcome to ShelterFindr
-Here, you can help find a shelter that best fits your need.
+Here, you can help find a shelter that best fits your needs.
+
+Created for INFO 340: Introduction To Relational Database Management Systems.
+
+http://heroku-postgres-97f2b1ad.herokuapp.com/
+
+# Main Page
+!Screenshot: s[Main landing page](https://github.com/eduardrg/ShelterFindr/blob/master/screen1.PNG)
+
+# Admin View
+![Screenshot: sEditing an entry as an admin](https://github.com/eduardrg/ShelterFindr/blob/master/screen2.PNG)
+
+# User View
+![Screenshot: searching for shelters as a user](https://github.com/eduardrg/ShelterFindr/blob/master/screen3.PNG)
+
 
 # Configuration and Deployment Steps
 ## Setting Up the Database
