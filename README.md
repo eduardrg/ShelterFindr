@@ -6,10 +6,10 @@ Created for INFO 340: Introduction To Relational Database Management Systems.
 http://heroku-postgres-97f2b1ad.herokuapp.com/
 
 # Main Page
-!Screenshot: s[Main landing page](https://github.com/eduardrg/ShelterFindr/blob/master/screen1.PNG)
+![Screenshot: Main landing page](https://github.com/eduardrg/ShelterFindr/blob/master/screen1.PNG)
 
 # Admin View
-![Screenshot: sEditing an entry as an admin](https://github.com/eduardrg/ShelterFindr/blob/master/screen2.PNG)
+![Screenshot: Editing an entry as an admin](https://github.com/eduardrg/ShelterFindr/blob/master/screen2.PNG)
 
 # User View
 ![Screenshot: searching for shelters as a user](https://github.com/eduardrg/ShelterFindr/blob/master/screen3.PNG)
